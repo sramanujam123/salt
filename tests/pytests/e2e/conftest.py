@@ -17,6 +17,11 @@ def salt_master(salt_master_factory):
     """
     A running salt-master fixture
     """
+    # Workaround https://github.com/saltstack/pytest-salt-factories/issues/160
+    workaround_file = salt_master_factory.state_tree.base.write_path / "files" / ".keep"
+    workaround_file.parent.mkdir()
+    workaround_file.touch()
+
     with salt_master_factory.started():
         with pytest.helpers.temp_file(
             ".keep", "", salt_master_factory.state_tree.base.write_path
