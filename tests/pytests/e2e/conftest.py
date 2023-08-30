@@ -18,7 +18,10 @@ def salt_master(salt_master_factory):
     A running salt-master fixture
     """
     with salt_master_factory.started():
-        yield salt_master_factory
+        with pytest.helpers.temp_file(
+            ".keep", "", salt_master_factory.state_tree.base.write_path
+        ):
+            yield salt_master_factory
 
 
 @pytest.fixture(scope="package")
